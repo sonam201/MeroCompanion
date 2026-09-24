@@ -8,25 +8,33 @@ See [ARCHITECTURE.md](./ARCHITECTURE.md) for the full system design.
 
 ## Stack
 
-Next.js (App Router, TypeScript) + Supabase (Postgres/Auth/RLS) + TanStack Query + Resend, all on
-free tiers.
+Next.js (App Router, TypeScript) + Neon (Postgres) + Drizzle ORM + Auth.js (magic-link email via
+Resend) + TanStack Query, all on free tiers.
 
 ## Getting started
 
-1. Copy the env template and fill in your Supabase/Resend keys:
+1. Copy the env template and fill in your keys:
 
    ```bash
    cp .env.local.example .env.local
    ```
 
-2. Create a [Supabase](https://supabase.com) project, then run the migration in
-   `supabase/migrations/0001_init.sql` against it (via the SQL editor, or the Supabase CLI).
-3. Create a [Resend](https://resend.com) account and API key. Sending to arbitrary recipients
-   requires a verified domain; without one, test emails can only go to your own address.
-4. Install dependencies and run the dev server:
+2. Create a [Neon](https://neon.tech) project and copy its connection string into
+   `DATABASE_URL`.
+3. Generate an auth secret: `npx auth secret` (writes/prints a value for `AUTH_SECRET`).
+4. Create a [Resend](https://resend.com) account and API key for `AUTH_RESEND_KEY`. Sending to
+   arbitrary recipients (not just yourself) requires a verified sending domain, set as
+   `RESEND_FROM_EMAIL`.
+5. Install dependencies and push the schema to your Neon database:
 
    ```bash
    npm install
+   npx drizzle-kit migrate
+   ```
+
+6. Run the dev server:
+
+   ```bash
    npm run dev
    ```
 
@@ -35,5 +43,6 @@ free tiers.
 ## Project layout
 
 - `src/app` — routes (App Router)
-- `src/lib/supabase` — Supabase client helpers (browser, server, middleware)
-- `supabase/migrations` — SQL schema + RLS policies
+- `src/lib/db` — Drizzle schema (`schema.ts`) and DB client (`index.ts`)
+- `src/lib/auth.ts` — Auth.js configuration
+- `drizzle/` — generated SQL migrations (from `npx drizzle-kit generate`)
