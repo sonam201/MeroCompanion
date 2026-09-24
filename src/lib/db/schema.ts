@@ -23,6 +23,9 @@ export const users = pgTable("user", {
   name: text("name"),
   email: text("email").notNull().unique(),
   emailVerified: timestamp("emailVerified", { mode: "date" }),
+  // Set by the user on the post-signup "set a password" step. Null for
+  // accounts that only ever use Google OAuth.
+  password: text("password"),
   image: text("image"),
 });
 

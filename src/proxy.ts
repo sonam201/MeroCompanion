@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
 
-const protectedPrefixes = ["/dashboard"];
+const protectedPrefixes = ["/dashboard", "/onboarding"];
 
 export const proxy = auth((req) => {
   const { pathname } = req.nextUrl;

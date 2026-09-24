@@ -8,6 +8,13 @@
       "when": 1790225030334,
       "tag": "0000_tricky_machine_man",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1790229706428,
+      "tag": "0001_cultured_celestials",
+      "breakpoints": true
     }
   ]
 }

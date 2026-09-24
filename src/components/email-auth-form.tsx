@@ -1,6 +1,12 @@
 import { signIn } from "@/lib/auth";
 
-export function EmailAuthForm({ submitLabel }: { submitLabel: string }) {
+export function EmailAuthForm({
+  submitLabel,
+  redirectTo = "/dashboard",
+}: {
+  submitLabel: string;
+  redirectTo?: string;
+}) {
   return (
     <form
       className="mt-6 flex flex-col gap-3"
@@ -8,7 +14,7 @@ export function EmailAuthForm({ submitLabel }: { submitLabel: string }) {
         "use server";
         await signIn("resend", {
           email: formData.get("email"),
-          redirectTo: "/dashboard",
+          redirectTo,
         });
       }}
     >
