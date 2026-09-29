@@ -9,6 +9,11 @@ import { WeeklyProgressChart } from "@/components/dashboard/weekly-progress-char
 import { MonthlyStats } from "@/components/dashboard/monthly-stats";
 import { MiniCalendar } from "@/components/dashboard/mini-calendar";
 import { StartPomodoroCard } from "@/components/dashboard/start-pomodoro-card";
+import { EmptyDashboardState } from "@/components/dashboard/empty-dashboard-state";
+
+// Mock for now - replace with a real query once task CRUD exists:
+// SELECT EXISTS(SELECT 1 FROM tasks WHERE user_id = ? AND scheduled_at::date = current_date)
+const hasTasksToday = false;
 
 export default async function DashboardPage() {
   const session = await auth();
@@ -43,16 +48,22 @@ export default async function DashboardPage() {
         </div>
       )}
 
-      <MonthlyStats />
+      {hasTasksToday ? (
+        <>
+          <MonthlyStats />
 
-      <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
-        <div className="lg:col-span-2">
-          <WeeklyProgressChart />
-        </div>
-        <StartPomodoroCard />
-      </div>
+          <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
+            <div className="lg:col-span-2">
+              <WeeklyProgressChart />
+            </div>
+            <StartPomodoroCard />
+          </div>
 
-      <MiniCalendar />
+          <MiniCalendar />
+        </>
+      ) : (
+        <EmptyDashboardState />
+      )}
     </main>
   );
 }
