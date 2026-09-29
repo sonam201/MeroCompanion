@@ -37,10 +37,6 @@ export function AuthLanding({
           <h1 className="text-3xl font-semibold text-gray-900 drop-shadow-sm">
             MeroCompanion
           </h1>
-          <p className="mt-2 text-gray-800 drop-shadow-sm">
-            Track job-search tasks and goals, run focused Pomodoro sessions, and get reminder
-            emails on your own schedule.
-          </p>
         </div>
 
         {panel === null && (
