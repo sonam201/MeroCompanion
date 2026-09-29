@@ -1,47 +1,75 @@
-import { DrizzleAdapter } from "@auth/drizzle-adapter";
 import { compare } from "bcryptjs";
 import { eq } from "drizzle-orm";
 import NextAuth from "next-auth";
 import Credentials from "next-auth/providers/credentials";
-import Google from "next-auth/providers/google";
-import Resend from "next-auth/providers/resend";
 import { db } from "@/lib/db";
-import { accounts, sessions, users, verificationTokens } from "@/lib/db/schema";
+import { users, verificationTokens } from "@/lib/db/schema";
+import { hashOtp } from "@/lib/otp";
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
-  adapter: DrizzleAdapter(db, {
-    usersTable: users,
-    accountsTable: accounts,
-    sessionsTable: sessions,
-    verificationTokensTable: verificationTokens,
-  }),
+  // No adapter: with only the Credentials provider (no OAuth, no Email
+  // provider) and JWT sessions, Auth.js needs no adapter-managed
+  // users/accounts/sessions bookkeeping - authorize() below manages the
+  // `users` table directly.
   providers: [
-    Google({
-      clientId: process.env.AUTH_GOOGLE_ID,
-      clientSecret: process.env.AUTH_GOOGLE_SECRET,
-    }),
-    // Used once, at signup: verifies the address is real. Landing here also
-    // makes user.email the single source of truth for where reminder
-    // emails go, and it updates automatically if the user signs in with a
-    // different address later. Ongoing sign-in is Google or email+password.
-    Resend({
-      apiKey: process.env.AUTH_RESEND_KEY,
-      from: process.env.RESEND_FROM_EMAIL,
-    }),
     Credentials({
       credentials: {
         email: { label: "Email", type: "email" },
         password: { label: "Password", type: "password" },
+        otp: { label: "Code", type: "text" },
       },
       authorize: async (credentials) => {
         const email = credentials?.email;
+        if (typeof email !== "string" || !email) {
+          return null;
+        }
+
+        const otp = credentials?.otp;
+        if (typeof otp === "string" && otp.length > 0) {
+          // Sign-up / email-verification path: a one-time code, not a
+          // password. Consumed on first attempt regardless of outcome so a
+          // leaked/guessed code can't be retried.
+          const [tokenRow] = await db
+            .select()
+            .from(verificationTokens)
+            .where(eq(verificationTokens.identifier, email));
+
+          if (!tokenRow) {
+            return null;
+          }
+
+          await db
+            .delete(verificationTokens)
+            .where(eq(verificationTokens.identifier, email));
+
+          if (tokenRow.expires < new Date() || tokenRow.token !== hashOtp(otp)) {
+            return null;
+          }
+
+          let [user] = await db.select().from(users).where(eq(users.email, email));
+          if (!user) {
+            [user] = await db
+              .insert(users)
+              .values({ email, emailVerified: new Date() })
+              .returning();
+          } else if (!user.emailVerified) {
+            [user] = await db
+              .update(users)
+              .set({ emailVerified: new Date() })
+              .where(eq(users.id, user.id))
+              .returning();
+          }
+
+          return { id: user.id, email: user.email, name: user.name };
+        }
+
         const password = credentials?.password;
-        if (typeof email !== "string" || typeof password !== "string") {
+        if (typeof password !== "string" || !password) {
           return null;
         }
 
         const [user] = await db.select().from(users).where(eq(users.email, email));
-        if (!user?.password) {
+        if (!user?.password || !user.emailVerified) {
           return null;
         }
 
@@ -54,9 +82,6 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       },
     }),
   ],
-  // Credentials-based sign-in can't use database sessions (there's no
-  // adapter-managed session for it), so the app uses JWT sessions overall.
-  // The adapter still persists users/accounts for Google + Resend.
   session: { strategy: "jwt" },
   callbacks: {
     async jwt({ token, user }) {
@@ -74,6 +99,5 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
   },
   pages: {
     signIn: "/sign-in",
-    verifyRequest: "/verify-request",
   },
 });

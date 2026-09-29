@@ -2,8 +2,7 @@
 
 import Image from "next/image";
 import { useState } from "react";
-import { EmailAuthForm } from "@/components/email-auth-form";
-import { GoogleAuthButton } from "@/components/auth/google-auth-button";
+import { EmailOtpSignupForm } from "@/components/auth/email-otp-signup-form";
 import { PasswordSignInForm } from "@/components/auth/password-sign-in-form";
 
 type Panel = "signin" | "signup" | null;
@@ -68,23 +67,10 @@ export function AuthLanding({
               Create your account
             </h2>
             <p className="mt-1 text-center text-sm text-gray-600">
-              Sign up with Google, or verify your email and set a password.
+              Verify your email with a code, then set a password.
             </p>
 
-            <div className="mt-4">
-              <GoogleAuthButton redirectTo="/dashboard" />
-            </div>
-
-            <div className="my-4 flex items-center gap-3 text-xs text-gray-400">
-              <span className="h-px flex-1 bg-gray-300" />
-              or
-              <span className="h-px flex-1 bg-gray-300" />
-            </div>
-
-            <EmailAuthForm
-              submitLabel="Send verification link"
-              redirectTo="/onboarding/set-password"
-            />
+            <EmailOtpSignupForm />
 
             <p className="mt-4 text-center text-sm text-gray-600">
               Already have an account?{" "}
@@ -103,7 +89,7 @@ export function AuthLanding({
           <div className="w-full rounded-lg bg-white/80 p-6 text-left shadow-lg backdrop-blur">
             <h2 className="text-center text-lg font-semibold text-gray-900">Welcome back</h2>
             <p className="mt-1 text-center text-sm text-gray-600">
-              Sign in with Google or your password.
+              Sign in with your email and password.
             </p>
 
             {error && (
@@ -111,16 +97,6 @@ export function AuthLanding({
                 That email/password combination didn&apos;t work.
               </p>
             )}
-
-            <div className="mt-4">
-              <GoogleAuthButton redirectTo="/dashboard" />
-            </div>
-
-            <div className="my-4 flex items-center gap-3 text-xs text-gray-400">
-              <span className="h-px flex-1 bg-gray-300" />
-              or
-              <span className="h-px flex-1 bg-gray-300" />
-            </div>
 
             <PasswordSignInForm redirectTo="/dashboard" currentPath={currentPath} />
 

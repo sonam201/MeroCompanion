@@ -8,9 +8,9 @@ See [ARCHITECTURE.md](./ARCHITECTURE.md) for the full system design.
 
 ## Stack
 
-Next.js (App Router, TypeScript) + Neon (Postgres) + Drizzle ORM + Auth.js (Google OAuth,
-email+password, and a Resend-powered email verification link at signup) + TanStack Query, all on
-free tiers.
+Next.js (App Router, TypeScript) + Neon (Postgres) + Drizzle ORM + Auth.js (Credentials provider:
+email+password, with a Resend-powered one-time code to verify email at signup) + TanStack Query,
+all on free tiers.
 
 ## Getting started
 
@@ -23,24 +23,18 @@ free tiers.
 2. Create a [Neon](https://neon.tech) project and copy its connection string into
    `DATABASE_URL`.
 3. Generate an auth secret: `npx auth secret` (writes/prints a value for `AUTH_SECRET`).
-4. Create a Google OAuth client for `AUTH_GOOGLE_ID`/`AUTH_GOOGLE_SECRET`:
-   - [Google Cloud Console](https://console.cloud.google.com/apis/credentials) → create a project
-     (or use an existing one) → **Create Credentials** → **OAuth client ID** → type **Web
-     application**
-   - Authorized redirect URI: `http://localhost:3000/api/auth/callback/google` for local dev (add
-     your production URL's equivalent later)
-5. Create a [Resend](https://resend.com) account and API key for `AUTH_RESEND_KEY`. Sending to
+4. Create a [Resend](https://resend.com) account and API key for `AUTH_RESEND_KEY`. Sending to
    arbitrary recipients (not just yourself) requires a verified sending domain, set as
    `RESEND_FROM_EMAIL`; until then you can develop with `onboarding@resend.dev`, which only
    delivers to your own Resend account email.
-6. Install dependencies and push the schema to your Neon database:
+5. Install dependencies and push the schema to your Neon database:
 
    ```bash
    npm install
    npx drizzle-kit migrate
    ```
 
-7. Run the dev server:
+6. Run the dev server:
 
    ```bash
    npm run dev
@@ -50,13 +44,18 @@ free tiers.
 
 ## Auth flow
 
-- **Sign up**: Google OAuth, or enter an email to get a verification link. Clicking it signs you
-  in and lands you on `/onboarding/set-password` to set a password (skippable).
-- **Sign in**: Google OAuth, or email + password.
+- **Sign up**: enter an email → a 6-digit code is sent via Resend → enter the code to verify →
+  land on `/onboarding/set-password` to set a password (skippable).
+- **Sign in**: email + password.
+
+No third-party identity provider (e.g. Google OAuth) is currently wired up — it was tried and
+removed early on; see the constitution (`.specify/memory/constitution.md`, Principle IV) for why.
 
 ## Project layout
 
 - `src/app` — routes (App Router)
 - `src/lib/db` — Drizzle schema (`schema.ts`) and DB client (`index.ts`)
-- `src/lib/auth.ts` — Auth.js configuration
+- `src/lib/auth.ts` — Auth.js configuration (Credentials provider, no adapter)
+- `src/lib/auth-actions.ts` — server actions for password sign-in and OTP request/verify
+- `src/lib/otp.ts` — OTP generation/hashing helpers
 - `drizzle/` — generated SQL migrations (from `npx drizzle-kit generate`)
