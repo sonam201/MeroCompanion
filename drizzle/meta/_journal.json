@@ -15,6 +15,13 @@
       "when": 1790229706428,
       "tag": "0001_cultured_celestials",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1790709405008,
+      "tag": "0002_smart_valeria_richards",
+      "breakpoints": true
     }
   ]
 }

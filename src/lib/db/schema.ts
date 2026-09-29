@@ -192,3 +192,17 @@ export const notificationLog = pgTable(
   },
   (table) => [index("notification_log_user_id_idx").on(table.userId)],
 );
+
+// Sliding-window rate limiting: one row per attempt. A key is checked by
+// counting rows for it newer than (now - window). No adapter/session
+// relation - this isn't user-scoped, it's keyed by whatever the caller
+// chooses (e.g. "otp-request:<email>", "password-fail:<email>").
+export const rateLimitAttempts = pgTable(
+  "rate_limit_attempts",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    key: text("key").notNull(),
+    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+  },
+  (table) => [index("rate_limit_attempts_key_idx").on(table.key)],
+);

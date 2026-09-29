@@ -8,9 +8,13 @@ import { signIn } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { verificationTokens } from "@/lib/db/schema";
 import { generateOtp, hashOtp } from "@/lib/otp";
+import { isUnderRateLimit, recordAttempt } from "@/lib/rate-limit";
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const OTP_TTL_MS = 10 * 60 * 1000;
+const OTP_COOLDOWN_MS = 60 * 1000;
+const OTP_HOURLY_WINDOW_MS = 60 * 60 * 1000;
+const OTP_HOURLY_MAX = 5;
 
 export async function signInWithPasswordAction(
   redirectTo: string,
@@ -37,6 +41,16 @@ export async function requestSignupOtpAction(
   if (!EMAIL_RE.test(email)) {
     return { ok: false, error: "Enter a valid email address." };
   }
+
+  const rateLimitKey = `otp-request:${email}`;
+  const [underCooldown, underHourlyCap] = await Promise.all([
+    isUnderRateLimit(rateLimitKey, OTP_COOLDOWN_MS, 1),
+    isUnderRateLimit(rateLimitKey, OTP_HOURLY_WINDOW_MS, OTP_HOURLY_MAX),
+  ]);
+  if (!underCooldown || !underHourlyCap) {
+    return { ok: false, error: "Too many requests. Try again shortly." };
+  }
+  await recordAttempt(rateLimitKey);
 
   const code = generateOtp();
 
