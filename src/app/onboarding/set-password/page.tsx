@@ -5,6 +5,7 @@ import { hash } from "bcryptjs";
 import { auth } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { users } from "@/lib/db/schema";
+import { ToastOnMount } from "@/components/toast-on-mount";
 
 export default async function SetPasswordPage({
   searchParams,
@@ -53,11 +54,9 @@ export default async function SetPasswordPage({
           without waiting on another email.
         </p>
 
-        {error && (
-          <p className="mt-4 text-sm text-red-600">
-            Passwords must match and be at least 8 characters.
-          </p>
-        )}
+        <ToastOnMount
+          message={error ? "Passwords must match (min. 8 characters)." : undefined}
+        />
 
         <form className="mt-6 flex flex-col gap-3" action={setPassword}>
           <input

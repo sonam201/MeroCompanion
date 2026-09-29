@@ -71,7 +71,7 @@ export async function verifySignupOtpAction(
     return { ok: true };
   } catch (err) {
     if (err instanceof AuthError) {
-      return { ok: false, error: "That code is incorrect or has expired." };
+      return { ok: false, error: "Incorrect or expired code." };
     }
     throw err;
   }

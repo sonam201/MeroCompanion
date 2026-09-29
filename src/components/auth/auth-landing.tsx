@@ -4,6 +4,7 @@ import Image from "next/image";
 import { useState } from "react";
 import { EmailOtpSignupForm } from "@/components/auth/email-otp-signup-form";
 import { PasswordSignInForm } from "@/components/auth/password-sign-in-form";
+import { ToastOnMount } from "@/components/toast-on-mount";
 
 type Panel = "signin" | "signup" | null;
 
@@ -92,11 +93,7 @@ export function AuthLanding({
               Sign in with your email and password.
             </p>
 
-            {error && (
-              <p className="mt-3 text-center text-sm text-red-600">
-                That email/password combination didn&apos;t work.
-              </p>
-            )}
+            <ToastOnMount message={error ? "Incorrect email or password." : undefined} />
 
             <PasswordSignInForm redirectTo="/dashboard" currentPath={currentPath} />
 

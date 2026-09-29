@@ -1,37 +1,35 @@
 "use client";
 
 import { useState, type FormEvent } from "react";
+import { toast } from "sonner";
 import { requestSignupOtpAction, verifySignupOtpAction } from "@/lib/auth-actions";
 
 export function EmailOtpSignupForm() {
   const [step, setStep] = useState<"email" | "otp">("email");
   const [email, setEmail] = useState("");
   const [otp, setOtp] = useState("");
-  const [error, setError] = useState<string | null>(null);
   const [pending, setPending] = useState(false);
 
   async function handleSendCode(e: FormEvent) {
     e.preventDefault();
     setPending(true);
-    setError(null);
     const result = await requestSignupOtpAction(email);
     setPending(false);
     if (result.ok) {
       setStep("otp");
     } else {
-      setError(result.error ?? "Something went wrong. Try again.");
+      toast.error(result.error ?? "Couldn't send the code.");
     }
   }
 
   async function handleVerify(e: FormEvent) {
     e.preventDefault();
     setPending(true);
-    setError(null);
     // On success this redirects and never returns; only a failure resolves here.
     const result = await verifySignupOtpAction(email, otp);
     setPending(false);
     if (!result.ok) {
-      setError(result.error ?? "That code didn't work.");
+      toast.error(result.error ?? "Incorrect or expired code.");
     }
   }
 
@@ -50,7 +48,6 @@ export function EmailOtpSignupForm() {
           placeholder="6-digit code"
           className="rounded-md border border-gray-300 bg-white/80 px-3 py-2 text-sm text-gray-900"
         />
-        {error && <p className="text-sm text-red-600">{error}</p>}
         <button
           type="submit"
           disabled={pending}
@@ -63,7 +60,6 @@ export function EmailOtpSignupForm() {
           onClick={() => {
             setStep("email");
             setOtp("");
-            setError(null);
           }}
           className="text-xs text-gray-500 underline"
         >
@@ -83,7 +79,6 @@ export function EmailOtpSignupForm() {
         placeholder="you@example.com"
         className="rounded-md border border-gray-300 bg-white/80 px-3 py-2 text-sm text-gray-900"
       />
-      {error && <p className="text-sm text-red-600">{error}</p>}
       <button
         type="submit"
         disabled={pending}
