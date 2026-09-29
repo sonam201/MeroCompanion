@@ -30,8 +30,8 @@ export default async function DashboardPage() {
 
       {!user?.password && (
         <div className="rounded-md border border-gray-300 p-4 text-sm dark:border-gray-700">
-          You don&apos;t have a password set yet, so email sign-in still requires a fresh
-          link each time.{" "}
+          You don&apos;t have a password set yet, so sign-in still requires a fresh emailed
+          code each time.{" "}
           <Link href="/onboarding/set-password" className="underline">
             Set one now
           </Link>
