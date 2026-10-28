@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { redirect } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import { auth } from "@/lib/auth";
 import { MonthCalendar } from "@/components/dashboard/month-calendar";
 import { PlanDayForm } from "@/components/dashboard/plan-day-form";
@@ -15,6 +15,21 @@ function todayIsoDate(): string {
   return new Date(now.getTime() - offset * 60000).toISOString().slice(0, 10);
 }
 
+// A malformed ?date= (wrong shape, or a calendar date that doesn't exist,
+// e.g. 2026-02-30) would otherwise flow straight into the DB queries below as
+// an Invalid Date, surfacing as a raw 500 instead of a clean 404.
+function isValidIsoDate(value: string): boolean {
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(value)) return false;
+  const d = new Date(`${value}T00:00:00`);
+  if (Number.isNaN(d.getTime())) return false;
+  // Same local-offset correction as todayIsoDate() above - a naive
+  // toISOString() here would shift by a day on any non-UTC server and
+  // reject otherwise-valid dates.
+  const offset = d.getTimezoneOffset();
+  const normalized = new Date(d.getTime() - offset * 60000).toISOString().slice(0, 10);
+  return normalized === value;
+}
+
 export default async function PlanDayPage({
   searchParams,
 }: {
@@ -26,6 +41,9 @@ export default async function PlanDayPage({
   }
 
   const { date: dateParam } = await searchParams;
+  if (dateParam !== undefined && !isValidIsoDate(dateParam)) {
+    notFound();
+  }
   const today = todayIsoDate();
   const date = dateParam ?? today;
 
