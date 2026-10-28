@@ -128,19 +128,19 @@ export function PomodoroTimer({
 
   return (
     <div>
-      <div className="rounded-2xl bg-black px-8 py-6 text-center shadow-lg">
+      <div className="rounded-2xl bg-black px-4 py-5 text-center shadow-lg sm:px-8 sm:py-6">
         <p className="text-xs tracking-[0.2em] text-gray-400 uppercase">
           {period.kind === "focus" ? "Focus" : "Break"}
           {isPaused && " · Paused"}
         </p>
         <p
-          className={`font-digital mt-1 text-6xl font-bold tracking-widest tabular-nums transition-opacity sm:text-7xl ${digitColor} ${digitGlow} ${isPaused ? "opacity-50" : ""}`}
+          className={`font-digital mt-1 text-4xl font-bold tracking-wide tabular-nums transition-opacity sm:text-6xl sm:tracking-widest lg:text-7xl ${digitColor} ${digitGlow} ${isPaused ? "opacity-50" : ""}`}
         >
           {formatRemaining(remainingMs)}
         </p>
       </div>
       {!isDone && (
-        <div className="mt-3 flex gap-2">
+        <div className="mt-3 flex flex-wrap gap-2">
           {isPaused ? (
             <button
               type="button"

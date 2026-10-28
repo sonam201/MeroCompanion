@@ -33,7 +33,7 @@ function CompletionBars({ stats }: { stats: CategoryStat[] }) {
     <div className="space-y-2">
       {stats.map((stat) => (
         <div key={stat.category} className="flex items-center gap-2 text-sm">
-          <span className="w-32 shrink-0 truncate text-gray-500">
+          <span className="w-16 shrink-0 truncate text-gray-500 sm:w-32">
             {taskCategoryLabel(stat.category)}
           </span>
           <span
@@ -56,7 +56,10 @@ function CompletionBars({ stats }: { stats: CategoryStat[] }) {
               }}
             />
           </span>
-          <span className="w-16 shrink-0 text-right tabular-nums" style={{ color: "var(--viz-ink)" }}>
+          <span
+            className="w-10 shrink-0 text-right text-xs tabular-nums sm:w-16 sm:text-sm"
+            style={{ color: "var(--viz-ink)" }}
+          >
             {stat.tasksCompleted}/{stat.tasksPlanned}
           </span>
         </div>
@@ -72,7 +75,7 @@ function FocusedTimeBars({ stats }: { stats: CategoryStat[] }) {
     <div className="space-y-2">
       {stats.map((stat) => (
         <div key={stat.category} className="flex items-center gap-2 text-sm">
-          <span className="w-32 shrink-0 truncate text-gray-500">
+          <span className="w-16 shrink-0 truncate text-gray-500 sm:w-32">
             {taskCategoryLabel(stat.category)}
           </span>
           <span
@@ -87,7 +90,10 @@ function FocusedTimeBars({ stats }: { stats: CategoryStat[] }) {
               }}
             />
           </span>
-          <span className="w-16 shrink-0 text-right tabular-nums" style={{ color: "var(--viz-ink)" }}>
+          <span
+            className="w-10 shrink-0 text-right text-xs tabular-nums sm:w-16 sm:text-sm"
+            style={{ color: "var(--viz-ink)" }}
+          >
             {formatMinutes(stat.focusedMinutes)}
           </span>
         </div>
@@ -131,7 +137,7 @@ export function WeeklyMonthlyChart({
 
   return (
     <div className="dashboard-viz space-y-4">
-      <div className="flex items-center justify-between gap-3">
+      <div className="flex flex-wrap items-center justify-between gap-3">
         <CategoryLegend categories={legendCategories} />
         <select
           value={period}

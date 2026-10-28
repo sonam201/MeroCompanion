@@ -34,16 +34,16 @@ export function MonthCalendar({ selectedDate }: { selectedDate: string }) {
   }
 
   return (
-    <div className="dashboard-card p-4">
+    <div className="dashboard-card p-3 sm:p-4">
       <p className="mb-3 text-sm font-medium">{monthLabel}</p>
-      <div className="grid grid-cols-7 gap-1 text-center text-xs text-gray-500">
+      <div className="grid grid-cols-7 gap-0.5 text-center text-xs text-gray-500 sm:gap-1">
         {WEEKDAY_LABELS.map((label) => (
           <div key={label} className="py-1">
             {label}
           </div>
         ))}
       </div>
-      <div className="grid grid-cols-7 gap-1 text-center text-sm">
+      <div className="grid grid-cols-7 gap-0.5 text-center text-sm sm:gap-1">
         {cells.map((day, i) => {
           if (day === null) {
             return <div key={i} />;

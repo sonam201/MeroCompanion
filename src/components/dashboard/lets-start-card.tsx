@@ -120,7 +120,7 @@ export function LetsStartCard({
         <p className="mt-2 text-sm text-gray-500">
           {offer.nextKind === "break" ? "Focus period complete." : "Break complete."}
         </p>
-        <div className="mt-3 flex gap-2">
+        <div className="mt-3 flex flex-wrap gap-2">
           <button
             type="button"
             onClick={() => startMutation.mutate({ taskId: offer.taskId, kind: offer.nextKind })}
@@ -174,7 +174,7 @@ export function LetsStartCard({
       <p className="text-sm text-gray-500">
         {time} · {taskCategoryLabel(task.category)}
       </p>
-      <div className="mt-3 flex gap-2">
+      <div className="mt-3 flex flex-wrap gap-2">
         <button
           type="button"
           onClick={() => startMutation.mutate({ taskId: task.id })}

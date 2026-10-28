@@ -39,8 +39,8 @@ export default async function DashboardPage() {
   ]);
 
   return (
-    <main className="flex flex-1 flex-col gap-6 p-8">
-      <div className="flex items-center justify-between">
+    <main className="flex flex-1 flex-col gap-6 p-4 sm:p-8">
+      <div className="flex flex-wrap items-center justify-between gap-2">
         <h1 className="text-2xl font-semibold">Dashboard</h1>
         <ProfileMenu email={session.user.email ?? ""}>
           <SignOutButton />

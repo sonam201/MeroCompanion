@@ -39,7 +39,7 @@ export function AuthLanding({
         }}
       />
 
-      <div className="relative z-10 flex w-full max-w-sm flex-col items-center gap-6 p-8 text-center">
+      <div className="relative z-10 flex w-full max-w-sm flex-col items-center gap-6 p-4 text-center sm:p-8">
         <div>
           <h1 className="text-3xl font-semibold text-gray-900 drop-shadow-sm">
             MeroCompanion
@@ -96,7 +96,15 @@ export function AuthLanding({
               Sign in with your email and password.
             </p>
 
-            <ToastOnMount message={error ? "Incorrect email or password." : undefined} />
+            <ToastOnMount
+              message={
+                error === "NoAccount"
+                  ? "No account found for that email. Sign up instead."
+                  : error
+                    ? "Incorrect email or password."
+                    : undefined
+              }
+            />
 
             <PasswordSignInForm redirectTo="/dashboard" currentPath={currentPath} />
 

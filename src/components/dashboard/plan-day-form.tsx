@@ -230,9 +230,9 @@ export function PlanDayForm({
   return (
     <div className="flex flex-col gap-8">
       <div className="dashboard-card p-4">
-        <div className="mb-3 flex items-center justify-between">
+        <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
           <h2 className="text-lg font-semibold">Plan {date}</h2>
-          <div className="flex items-center gap-2">
+          <div className="flex flex-wrap items-center gap-2">
             <button
               type="button"
               onClick={handleClear}
@@ -253,14 +253,14 @@ export function PlanDayForm({
         </div>
 
         <div
-          className="relative max-h-[32rem] overflow-y-auto"
-          style={{ display: "grid", gridTemplateColumns: "4rem 1fr" }}
+          className="relative max-h-[32rem] overflow-y-auto [--label-col:3.25rem] sm:[--label-col:4rem]"
+          style={{ display: "grid", gridTemplateColumns: "var(--label-col) 1fr" }}
         >
           {HOURS.map((hour) => (
             <div
               key={`label-${hour}`}
-              className="border-t border-gray-100 pt-1 pr-3 text-right text-xs text-gray-400 dark:border-gray-800"
-              style={{ gridColumn: 1, gridRow: hour + 1, height: `${ROW_HEIGHT_REM}rem` }}
+              className="border-t border-gray-100 pt-1 pr-2 text-right text-xs text-gray-400 sm:pr-3 dark:border-gray-800"
+              style={{ gridColumn: 1, gridRow: hour + 1, minHeight: `${ROW_HEIGHT_REM}rem` }}
             >
               {formatHourLabel(hour)}
             </div>
@@ -276,13 +276,13 @@ export function PlanDayForm({
               return (
                 <div
                   key={`cell-${hour}`}
-                  className="border-t border-gray-100 pl-3 dark:border-gray-800"
-                  style={{ gridColumn: 2, gridRow: hour + 1, height: `${ROW_HEIGHT_REM}rem` }}
+                  className="border-t border-gray-100 pl-2 sm:pl-3 dark:border-gray-800"
+                  style={{ gridColumn: 2, gridRow: hour + 1, minHeight: `${ROW_HEIGHT_REM}rem` }}
                 >
                   <button
                     type="button"
                     onClick={() => openAddPopup(hour)}
-                    className="text-xs text-blue-600 hover:underline"
+                    className="rounded px-1.5 py-1 text-xs text-blue-600 hover:underline"
                   >
                     + Add task
                   </button>
@@ -296,8 +296,8 @@ export function PlanDayForm({
               return (
                 <div
                   key={`cell-${hour}`}
-                  className="border-t border-gray-100 pl-3 dark:border-gray-800"
-                  style={{ gridColumn: 2, gridRow: hour + 1, height: `${ROW_HEIGHT_REM}rem` }}
+                  className="border-t border-gray-100 pl-2 sm:pl-3 dark:border-gray-800"
+                  style={{ gridColumn: 2, gridRow: hour + 1, minHeight: `${ROW_HEIGHT_REM}rem` }}
                 />
               );
             }
@@ -305,7 +305,7 @@ export function PlanDayForm({
             return (
               <div
                 key={`cell-${hour}`}
-                className="flex flex-col gap-1 border-t border-gray-100 py-1 pl-3 dark:border-gray-800"
+                className="flex flex-col gap-1 border-t border-gray-100 py-1 pl-2 sm:pl-3 dark:border-gray-800"
                 style={{
                   gridColumn: 2,
                   gridRow: `${hour + 1} / span ${Math.max(...startsHere.map(({ row }) => taskSpanHours(row)))}`,
@@ -334,7 +334,7 @@ export function PlanDayForm({
                     <button
                       type="button"
                       onClick={() => removeRow(i)}
-                      className="shrink-0 text-xs text-gray-400 hover:text-red-600"
+                      className="shrink-0 rounded px-1.5 py-1 text-xs text-gray-400 hover:text-red-600"
                     >
                       Remove
                     </button>

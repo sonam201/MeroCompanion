@@ -5,7 +5,7 @@ import { redirect } from "next/navigation";
 import { eq } from "drizzle-orm";
 import { signIn } from "@/lib/auth";
 import { db } from "@/lib/db";
-import { verificationTokens } from "@/lib/db/schema";
+import { users, verificationTokens } from "@/lib/db/schema";
 import { sendMail } from "@/lib/mailer";
 import { generateOtp, hashOtp } from "@/lib/otp";
 import { isUnderRateLimit, recordAttempt } from "@/lib/rate-limit";
@@ -21,9 +21,18 @@ export async function signInWithPasswordAction(
   currentPath: string,
   formData: FormData,
 ) {
+  const email = formData.get("email");
+
+  if (typeof email === "string" && email) {
+    const [existing] = await db.select().from(users).where(eq(users.email, email));
+    if (!existing) {
+      redirect(`${currentPath}?error=NoAccount`);
+    }
+  }
+
   try {
     await signIn("credentials", {
-      email: formData.get("email"),
+      email,
       password: formData.get("password"),
       redirectTo,
     });
@@ -40,6 +49,11 @@ export async function requestSignupOtpAction(
 ): Promise<{ ok: boolean; error?: string }> {
   if (!EMAIL_RE.test(email)) {
     return { ok: false, error: "Enter a valid email address." };
+  }
+
+  const [existing] = await db.select().from(users).where(eq(users.email, email));
+  if (existing?.emailVerified) {
+    return { ok: false, error: "This email is already registered. Sign in instead." };
   }
 
   const rateLimitKey = `otp-request:${email}`;

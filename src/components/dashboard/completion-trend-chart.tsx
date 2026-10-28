@@ -36,12 +36,21 @@ export function CompletionTrendChart({ points }: { points: TrendPoint[] }) {
       <p className="mb-2 text-xs font-medium uppercase tracking-wide text-gray-400">
         Completion rate trend
       </p>
-      <svg
-        viewBox={`0 0 ${WIDTH} ${HEIGHT}`}
-        className="w-full"
-        role="img"
-        aria-label="Daily completion rate trend"
-      >
+      {/*
+        The viewBox scales the SVG's own 9px/3px internal units down with the
+        container, so on a narrow phone (where the card's rendered width can
+        drop well below the 600-unit viewBox) axis labels and point markers
+        shrink below legibility. A min-width + horizontal scroll keeps the
+        chart at a legible physical size instead, trading "whole chart
+        visible" for "readable chart" on the narrowest screens.
+      */}
+      <div className="overflow-x-auto">
+        <svg
+          viewBox={`0 0 ${WIDTH} ${HEIGHT}`}
+          className="w-full min-w-[420px]"
+          role="img"
+          aria-label="Daily completion rate trend"
+        >
         {[0, 50, 100].map((gridRate) => (
           <g key={gridRate}>
             <line
@@ -81,7 +90,8 @@ export function CompletionTrendChart({ points }: { points: TrendPoint[] }) {
             </text>
           ) : null,
         )}
-      </svg>
+        </svg>
+      </div>
     </div>
   );
 }

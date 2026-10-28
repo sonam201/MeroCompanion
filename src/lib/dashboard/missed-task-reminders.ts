@@ -34,7 +34,10 @@ function buildMissedTaskQuery(minutesLate: number, requireFirstSent: boolean) {
       -- future pass the instant it exists, not just going forward from here
       and ${
         requireFirstSent
-          ? sql`t.first_reminder_sent_at is not null and t.second_reminder_sent_at is null`
+          // "Other" is the uncategorized catch-all with no strict follow-through
+          // expectation - it only ever gets the one-time first nudge, never the
+          // escalating second reminder, so it's excluded from this pass entirely.
+          ? sql`t.first_reminder_sent_at is not null and t.second_reminder_sent_at is null and t.category <> 'other'`
           : sql`t.first_reminder_sent_at is null`
       }
       and (t.scheduled_at at time zone coalesce(rp.timezone, 'UTC'))::date
