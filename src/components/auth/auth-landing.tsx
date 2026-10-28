@@ -21,7 +21,14 @@ export function AuthLanding({
 
   return (
     <main className="relative flex flex-1 items-center justify-center overflow-hidden">
-      <Image src="/time.jpg" alt="" fill priority sizes="100vw" className="object-cover" />
+      <Image
+        src="/time.jpg"
+        alt=""
+        fill
+        priority
+        sizes="100vw"
+        className="object-cover opacity-30"
+      />
       {/* Low-opacity light wash: keeps the bright photo intact while giving the text a
           contrast floor regardless of which part of the image sits behind it. */}
       <div

@@ -27,6 +27,10 @@ export const users = pgTable("user", {
   // accounts that only ever use Google OAuth.
   password: text("password"),
   image: text("image"),
+  enabledTaskCategories: text("enabled_task_categories")
+    .array()
+    .notNull()
+    .default(["other", "study", "job_application", "work"]),
 });
 
 export const accounts = pgTable(
@@ -72,12 +76,13 @@ export const verificationTokens = pgTable(
 // ---------------------------------------------------------------------------
 export const taskStatus = pgEnum("task_status", ["todo", "in_progress", "done"]);
 export const taskPriority = pgEnum("task_priority", ["low", "medium", "high"]);
-export const taskTag = pgEnum("task_tag", [
-  "application",
-  "interview_prep",
-  "networking",
-  "skill_building",
+export const taskCategory = pgEnum("task_category", [
+  "other",
+  "study",
+  "job_application",
+  "work",
 ]);
+export const pomodoroKind = pgEnum("pomodoro_kind", ["focus", "break"]);
 
 export const goals = pgTable(
   "goals",
@@ -107,10 +112,20 @@ export const tasks = pgTable(
     description: text("description"),
     status: taskStatus("status").notNull().default("todo"),
     priority: taskPriority("priority").notNull().default("medium"),
-    tag: taskTag("tag"),
+    category: taskCategory("category").notNull().default("other"),
     scheduledAt: timestamp("scheduled_at", { withTimezone: true }),
+    // Optional end of this task's planned time slot. Null means a point-in-time
+    // task (occupies just its own hour on the Plan-your-day timeline); set means
+    // it spans from scheduledAt through this timestamp. Distinct from dueAt
+    // (a deadline), which this feature doesn't use.
+    scheduledEndAt: timestamp("scheduled_end_at", { withTimezone: true }),
     dueAt: timestamp("due_at", { withTimezone: true }),
     estimatedPomodoros: integer("estimated_pomodoros").notNull().default(1),
+    // Missed-start reminder tracking (feature 004). Null = that stage hasn't
+    // been sent yet; set once and never cleared, including after editing
+    // scheduledAt - see specs/004-missed-pomodoro-reminders/data-model.md.
+    firstReminderSentAt: timestamp("first_reminder_sent_at", { withTimezone: true }),
+    secondReminderSentAt: timestamp("second_reminder_sent_at", { withTimezone: true }),
     createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
     updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
   },
@@ -136,6 +151,15 @@ export const pomodoroSessions = pgTable(
     plannedFocusMin: integer("planned_focus_min").notNull().default(25),
     plannedBreakMin: integer("planned_break_min").notNull().default(5),
     completed: boolean("completed").notNull().default(false),
+    kind: pomodoroKind("kind").notNull().default("focus"),
+    // Pause/resume: pausedAt is set while the current pause is in effect (null
+    // when running or never paused). pausedMs accumulates total paused time
+    // across however many pause/resume cycles, so the effective end time is
+    // always startedAt + plannedMinutes + pausedMs - shifting the deadline
+    // forward by exactly how long it was paused, rather than tracking
+    // "remaining time" as its own mutable value.
+    pausedAt: timestamp("paused_at", { withTimezone: true }),
+    pausedMs: integer("paused_ms").notNull().default(0),
   },
   (table) => [
     index("pomodoro_sessions_user_id_idx").on(table.userId),

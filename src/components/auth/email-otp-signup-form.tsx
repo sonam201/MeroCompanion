@@ -16,6 +16,7 @@ export function EmailOtpSignupForm() {
     const result = await requestSignupOtpAction(email);
     setPending(false);
     if (result.ok) {
+      toast.success("Verification code sent — check your inbox.");
       setStep("otp");
     } else {
       toast.error(result.error ?? "Couldn't send the code.");
@@ -30,13 +31,15 @@ export function EmailOtpSignupForm() {
     setPending(false);
     if (!result.ok) {
       toast.error(result.error ?? "Incorrect or expired code.");
+    } else {
+      toast.success("Verified! Setting up your account…");
     }
   }
 
   if (step === "otp") {
     return (
       <form onSubmit={handleVerify} className="mt-6 flex flex-col gap-3">
-        <p className="text-sm text-gray-600">We sent a code to {email}.</p>
+        <p className="text-base text-gray-600">We sent a code to {email}.</p>
         <input
           type="text"
           inputMode="numeric"
@@ -46,12 +49,12 @@ export function EmailOtpSignupForm() {
           value={otp}
           onChange={(e) => setOtp(e.target.value)}
           placeholder="6-digit code"
-          className="rounded-md border border-gray-300 bg-white/80 px-3 py-2 text-sm text-gray-900"
+          className="rounded-md border border-gray-300 bg-white/80 px-3 py-2 text-base text-gray-900"
         />
         <button
           type="submit"
           disabled={pending}
-          className="rounded-md bg-gray-900 px-3 py-2 text-sm font-medium text-white transition-colors hover:bg-gray-800 disabled:opacity-60"
+          className="rounded-md bg-gray-900 px-3 py-2 text-base font-medium text-white transition-colors hover:bg-gray-800 disabled:opacity-60"
         >
           {pending ? "Verifying..." : "Verify & continue"}
         </button>
@@ -77,12 +80,12 @@ export function EmailOtpSignupForm() {
         value={email}
         onChange={(e) => setEmail(e.target.value)}
         placeholder="you@example.com"
-        className="rounded-md border border-gray-300 bg-white/80 px-3 py-2 text-sm text-gray-900"
+        className="rounded-md border border-gray-300 bg-white/80 px-3 py-2 text-base text-gray-900"
       />
       <button
         type="submit"
         disabled={pending}
-        className="rounded-md bg-gray-900 px-3 py-2 text-sm font-medium text-white transition-colors hover:bg-gray-800 disabled:opacity-60"
+        className="rounded-md bg-gray-900 px-3 py-2 text-base font-medium text-white transition-colors hover:bg-gray-800 disabled:opacity-60"
       >
         {pending ? "Sending..." : "Send verification code"}
       </button>

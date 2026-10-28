@@ -22,6 +22,41 @@
       "when": 1790709405008,
       "tag": "0002_smart_valeria_richards",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1790709406008,
+      "tag": "0003_task_category_and_preferences",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1790742100069,
+      "tag": "0004_crazy_ronan",
+      "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1790855251802,
+      "tag": "0005_lean_blue_shield",
+      "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1791715784936,
+      "tag": "0006_opposite_madripoor",
+      "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "7",
+      "when": 1793187816722,
+      "tag": "0007_broad_mauler",
+      "breakpoints": true
     }
   ]
 }

@@ -8,8 +8,9 @@
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --font-sans: var(--font-eb-garamond);
+  --font-mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  --font-digital: var(--font-clock), ui-monospace, "SF Mono", Menlo, Consolas, monospace;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -22,4 +23,49 @@
 body {
   background: var(--background);
   color: var(--foreground);
+}
+
+@keyframes dashboard-empty-state-in {
+  from {
+    opacity: 0;
+    transform: translateY(0.75rem);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.dashboard-empty-state {
+  animation: dashboard-empty-state-in 400ms ease-out;
+}
+
+/* Legibility backing for dashboard cards sitting over the andhakar.jpg
+   background (src/app/dashboard/layout.tsx) - without this, card text would
+   sit directly on the low-opacity photo. */
+.dashboard-card {
+  @apply rounded-lg border border-gray-200 bg-white/80 backdrop-blur-sm dark:border-gray-800 dark:bg-gray-900/80;
+}
+
+/* Categorical palette for the dashboard analytics chart - validated via the
+   dataviz skill's scripts/validate_palette.js (adjacent-pair gates, both
+   modes). Slot order: other, study, job_application, work. */
+.dashboard-viz {
+  --series-other: #2a78d6;
+  --series-study: #eb6834;
+  --series-job_application: #1baf7a;
+  --series-work: #eda100;
+  --viz-track: #e1e0d9;
+  --viz-ink: #52514e;
+}
+
+@media (prefers-color-scheme: dark) {
+  .dashboard-viz {
+    --series-other: #3987e5;
+    --series-study: #d95926;
+    --series-job_application: #199e70;
+    --series-work: #c98500;
+    --viz-track: #2c2c2a;
+    --viz-ink: #c3c2b7;
+  }
 }

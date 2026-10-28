@@ -4,7 +4,19 @@ import { redirect } from "next/navigation";
 import { auth } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { users } from "@/lib/db/schema";
+import { ProfileMenu } from "@/components/profile-menu";
 import { SignOutButton } from "@/components/sign-out-button";
+import { AnalyticsSection } from "@/components/dashboard/analytics-section";
+import { HabitEngagementCard } from "@/components/dashboard/habit-engagement-card";
+import { LetsStartCard } from "@/components/dashboard/lets-start-card";
+import { TodayLabel } from "@/components/dashboard/today-label";
+import {
+  getActivePeriod,
+  getDashboardAnalytics,
+  getDashboardTrends,
+  getHabitStreak,
+  getTodayLetsStartTask,
+} from "@/lib/dashboard/queries";
 
 export default async function DashboardPage() {
   const session = await auth();
@@ -13,23 +25,30 @@ export default async function DashboardPage() {
     redirect("/sign-in");
   }
 
-  const [user] = await db
-    .select({ password: users.password })
-    .from(users)
-    .where(eq(users.id, session.user.id));
+  const [user, analytics, trends, letsStartTask, activePeriod, streakDays] = await Promise.all([
+    db
+      .select({ password: users.password })
+      .from(users)
+      .where(eq(users.id, session.user.id))
+      .then(([row]) => row),
+    getDashboardAnalytics(session.user.id),
+    getDashboardTrends(session.user.id),
+    getTodayLetsStartTask(session.user.id),
+    getActivePeriod(session.user.id),
+    getHabitStreak(session.user.id),
+  ]);
 
   return (
     <main className="flex flex-1 flex-col gap-6 p-8">
       <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-semibold">Dashboard</h1>
-          <p className="text-sm text-gray-500">Signed in as {session.user.email}</p>
-        </div>
-        <SignOutButton />
+        <h1 className="text-2xl font-semibold">Dashboard</h1>
+        <ProfileMenu email={session.user.email ?? ""}>
+          <SignOutButton />
+        </ProfileMenu>
       </div>
 
       {!user?.password && (
-        <div className="rounded-md border border-gray-300 p-4 text-sm dark:border-gray-700">
+        <div className="dashboard-card p-4 text-sm">
           You don&apos;t have a password set yet, so sign-in still requires a fresh emailed
           code each time.{" "}
           <Link href="/onboarding/set-password" className="underline">
@@ -39,9 +58,16 @@ export default async function DashboardPage() {
         </div>
       )}
 
-      <p className="text-sm text-gray-500">
-        Tasks, goals, and Pomodoro sessions land here next.
-      </p>
+      <div className="grid gap-6 lg:grid-cols-[2fr_1fr]">
+        <div className="flex flex-col gap-6">
+          <AnalyticsSection analytics={analytics} trends={trends} />
+          <HabitEngagementCard analytics={analytics} streakDays={streakDays} />
+        </div>
+        <div className="flex flex-col gap-6">
+          <TodayLabel />
+          <LetsStartCard task={letsStartTask} activePeriod={activePeriod} />
+        </div>
+      </div>
     </main>
   );
 }

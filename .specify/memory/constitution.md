@@ -1,11 +1,20 @@
 <!--
 Sync Impact Report
-Version change: 1.0.0 → 2.0.0
-Modified principles: IV. Progressive Passwordless-to-Password Auth — redefined (Google OAuth
-  removed; email verification changed from a clicked magic link to a typed one-time code)
+Version change: 2.0.0 → 2.0.1
+Modified principles: none (wording only — Principle IV's example provider name updated)
 Added sections: none
 Removed sections: none
 Deferred TODOs: none
+Rationale: Resend's free sandbox sender can only email the Resend account's own address until a
+  domain is verified, which blocked other users from signing up. Switched the OTP/reminder email
+  mechanism to Gmail SMTP (Nodemailer, the project owner's own Gmail account + an App Password) -
+  zero cost, no domain needed, works for any recipient immediately. The actual rule in Principle IV
+  (verify via a one-time emailed code before the password step) is unchanged, only the parenthetical
+  naming which service sends it, so this is a PATCH, not a redefinition.
+
+Previous Sync Impact Report (1.0.0 → 2.0.0):
+Modified principles: IV. Progressive Passwordless-to-Password Auth — redefined (Google OAuth
+  removed; email verification changed from a clicked magic link to a typed one-time code)
 Rationale: Google OAuth was dropped after `redirect_uri_mismatch` setup friction; the sign-up
   verification mechanism changed from an emailed link (Auth.js's Email/Resend provider) to a
   typed 6-digit code, both verified and consumed through the Credentials provider's own
@@ -19,11 +28,11 @@ Rationale: Google OAuth was dropped after `redirect_uri_mismatch` setup friction
 ## Core Principles
 
 ### I. Free-Tier-First
-All infrastructure and third-party services MUST run on free tiers (Neon, Resend, Vercel,
-GitHub Actions, Google OAuth, etc.). No paid service, paid tier upgrade, or usage-based
+All infrastructure and third-party services MUST run on free tiers (Neon, Gmail SMTP, Vercel,
+GitHub Actions, etc.). No paid service, paid tier upgrade, or usage-based
 billing risk may be introduced without explicit user approval first. When a free tier
-imposes a hard constraint (e.g. Resend's 100 emails/day, Vercel Hobby cron limited to
-once/day), the design MUST work around the constraint rather than assume it away.
+imposes a hard constraint (e.g. Gmail's ~500 emails/day personal-account cap, Vercel Hobby cron
+limited to once/day), the design MUST work around the constraint rather than assume it away.
 Rationale: the project is explicitly scoped to run on free services; this is a standing
 cost constraint, not a one-time setup decision.
 
@@ -47,7 +56,7 @@ Rationale: removing Supabase removed the DB-level safety net; the application la
 now the only enforcement point, so it cannot be treated as optional or added later.
 
 ### IV. Progressive Passwordless-to-Password Auth
-Sign-up MUST verify a real email address via a one-time code emailed to it (Resend) before
+Sign-up MUST verify a real email address via a one-time code emailed to it (Gmail SMTP) before
 an account is treated as claimed. That verification step MUST prompt the user to set a
 password (skippable, not forced) immediately after. Ongoing sign-in MUST be via
 email+password; a fresh verification code MUST NOT be required for routine, repeated
@@ -72,9 +81,9 @@ oversized changes.
 
 Approved stack: Next.js (App Router, TypeScript), Neon (Postgres), Drizzle ORM
 (schema + migrations), Auth.js v5 (Credentials provider only, no adapter, JWT sessions),
-TanStack Query, Resend (called directly for OTP + reminder email, not through an Auth.js
-provider), Vercel (hosting), GitHub Actions (scheduled reminder polling). Introducing a new
-infrastructure dependency,
+TanStack Query, Gmail SMTP via Nodemailer (called directly for OTP + reminder email, not
+through an Auth.js provider), Vercel (hosting), GitHub Actions (scheduled reminder polling).
+Introducing a new infrastructure dependency,
 replacing a stack component, or adding a paid tier requires updating `ARCHITECTURE.md`
 in the same change and MUST be treated as a constitution-relevant decision, not a
 routine implementation detail.
@@ -99,4 +108,4 @@ principles or sections, PATCH for clarifications/wording), and MUST update
 this document and `ARCHITECTURE.md` together. Reviews of specs/plans should verify
 compliance with these principles before implementation begins.
 
-**Version**: 2.0.0 | **Ratified**: 2026-09-29 | **Last Amended**: 2026-09-30
+**Version**: 2.0.1 | **Ratified**: 2026-09-29 | **Last Amended**: 2026-10-08

@@ -2,11 +2,11 @@
 
 import { AuthError } from "next-auth";
 import { redirect } from "next/navigation";
-import { Resend } from "resend";
 import { eq } from "drizzle-orm";
 import { signIn } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { verificationTokens } from "@/lib/db/schema";
+import { sendMail } from "@/lib/mailer";
 import { generateOtp, hashOtp } from "@/lib/otp";
 import { isUnderRateLimit, recordAttempt } from "@/lib/rate-limit";
 
@@ -61,15 +61,13 @@ export async function requestSignupOtpAction(
     expires: new Date(Date.now() + OTP_TTL_MS),
   });
 
-  const resend = new Resend(process.env.AUTH_RESEND_KEY);
-  const { error } = await resend.emails.send({
-    from: process.env.RESEND_FROM_EMAIL!,
+  const result = await sendMail({
     to: email,
     subject: "Your MeroCompanion verification code",
     text: `Your verification code is ${code}. It expires in 10 minutes.`,
   });
 
-  if (error) {
+  if (!result.ok) {
     return { ok: false, error: "Couldn't send the code. Try again." };
   }
 
