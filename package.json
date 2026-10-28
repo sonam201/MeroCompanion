@@ -15,7 +15,7 @@
     "drizzle-orm": "^0.45.3",
     "next": "16.3.6",
     "next-auth": "^5.0.0-beta.32",
-    "nodemailer": "^10.0.16",
+    "nodemailer": "^8.0.11",
     "react": "19.2.8",
     "react-dom": "19.2.8",
     "sonner": "^2.0.8"
