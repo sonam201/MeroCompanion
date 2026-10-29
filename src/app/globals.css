@@ -68,6 +68,20 @@ body {
   animation: how-it-works-panel-in 250ms cubic-bezier(0.16, 1, 0.3, 1);
 }
 
+@keyframes how-it-works-trigger-glow {
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 rgba(17, 24, 39, 0.25);
+  }
+  50% {
+    box-shadow: 0 0 14px 4px rgba(17, 24, 39, 0.3);
+  }
+}
+
+.how-it-works-trigger {
+  animation: how-it-works-trigger-glow 2.4s ease-in-out infinite;
+}
+
 /* Legibility backing for dashboard cards sitting over the andhakar.jpg
    background (src/app/dashboard/layout.tsx) - without this, card text would
    sit directly on the low-opacity photo. */

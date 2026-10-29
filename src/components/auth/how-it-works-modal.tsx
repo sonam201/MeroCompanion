@@ -63,7 +63,7 @@ export function HowItWorksModal() {
           setActiveIndex(0);
           setOpen(true);
         }}
-        className="text-sm font-medium text-gray-700 underline-offset-2 transition hover:text-gray-900 hover:underline"
+        className="how-it-works-trigger rounded-full border border-gray-900/15 bg-white/70 px-4 py-1.5 text-sm font-medium text-gray-800 backdrop-blur transition-transform duration-150 hover:scale-105 hover:bg-white"
       >
         What is MeroCompanion?
       </button>

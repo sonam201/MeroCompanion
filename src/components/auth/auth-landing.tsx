@@ -71,7 +71,14 @@ export function AuthLanding({
 
         {panel === "signup" && (
           <div className="w-full rounded-lg bg-white/80 p-6 text-left shadow-lg backdrop-blur">
-            <h2 className="text-center text-lg font-semibold text-gray-900">
+            <button
+              type="button"
+              onClick={() => setPanel(null)}
+              className="text-sm text-gray-500 transition hover:text-gray-900"
+            >
+              ← Back
+            </button>
+            <h2 className="mt-2 text-center text-lg font-semibold text-gray-900">
               Create your account
             </h2>
             <p className="mt-1 text-center text-sm text-gray-600">
@@ -95,7 +102,14 @@ export function AuthLanding({
 
         {panel === "signin" && (
           <div className="w-full rounded-lg bg-white/80 p-6 text-left shadow-lg backdrop-blur">
-            <h2 className="text-center text-lg font-semibold text-gray-900">Welcome back</h2>
+            <button
+              type="button"
+              onClick={() => setPanel(null)}
+              className="text-sm text-gray-500 transition hover:text-gray-900"
+            >
+              ← Back
+            </button>
+            <h2 className="mt-2 text-center text-lg font-semibold text-gray-900">Welcome back</h2>
             <p className="mt-1 text-center text-sm text-gray-600">
               Sign in with your email and password.
             </p>
