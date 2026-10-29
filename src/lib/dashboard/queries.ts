@@ -253,7 +253,9 @@ async function getAnalyticsWindow(
   const focusRows = await db
     .select({
       category: tasks.category,
-      minutes: sql<number>`coalesce(sum(extract(epoch from (${pomodoroSessions.endedAt} - ${pomodoroSessions.startedAt}))), 0) / 60`.mapWith(
+      // Raw wall-clock duration minus pausedMs - without this, time spent
+      // paused was being counted as focused time.
+      minutes: sql<number>`coalesce(sum(extract(epoch from (${pomodoroSessions.endedAt} - ${pomodoroSessions.startedAt})) - ${pomodoroSessions.pausedMs} / 1000.0), 0) / 60`.mapWith(
         Number,
       ),
     })
