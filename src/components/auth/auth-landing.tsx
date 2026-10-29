@@ -3,6 +3,7 @@
 import Image from "next/image";
 import { useState } from "react";
 import { EmailOtpSignupForm } from "@/components/auth/email-otp-signup-form";
+import { HowItWorksModal } from "@/components/auth/how-it-works-modal";
 import { PasswordSignInForm } from "@/components/auth/password-sign-in-form";
 import { ToastOnMount } from "@/components/toast-on-mount";
 
@@ -39,7 +40,7 @@ export function AuthLanding({
         }}
       />
 
-      <div className="relative z-10 flex w-full max-w-sm flex-col items-center gap-6 p-4 text-center sm:p-8">
+      <div className="relative z-10 flex w-full max-w-sm flex-col items-center gap-6 p-3 text-center min-[400px]:p-4 sm:p-8">
         <div>
           <h1 className="text-3xl font-semibold text-gray-900 drop-shadow-sm">
             MeroCompanion
@@ -47,22 +48,25 @@ export function AuthLanding({
         </div>
 
         {panel === null && (
-          <div className="flex gap-3">
-            <button
-              type="button"
-              onClick={() => setPanel("signup")}
-              className="rounded-md bg-gray-900 px-4 py-2 text-sm font-medium text-white transition-transform duration-150 hover:scale-105 hover:bg-gray-800"
-            >
-              Sign up
-            </button>
-            <button
-              type="button"
-              onClick={() => setPanel("signin")}
-              className="rounded-md border border-gray-900/20 bg-white/70 px-4 py-2 text-sm font-medium text-gray-900 backdrop-blur transition-transform duration-150 hover:scale-105 hover:bg-white"
-            >
-              Sign in
-            </button>
-          </div>
+          <>
+            <div className="flex gap-3">
+              <button
+                type="button"
+                onClick={() => setPanel("signup")}
+                className="rounded-md bg-gray-900 px-4 py-2 text-sm font-medium text-white transition-transform duration-150 hover:scale-105 hover:bg-gray-800"
+              >
+                Sign up
+              </button>
+              <button
+                type="button"
+                onClick={() => setPanel("signin")}
+                className="rounded-md border border-gray-900/20 bg-white/70 px-4 py-2 text-sm font-medium text-gray-900 backdrop-blur transition-transform duration-150 hover:scale-105 hover:bg-white"
+              >
+                Sign in
+              </button>
+            </div>
+            <HowItWorksModal />
+          </>
         )}
 
         {panel === "signup" && (

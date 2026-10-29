@@ -13,14 +13,14 @@ export function AnalyticsSection({
 
   if (!hasAnyTaskData) {
     return (
-      <div className="dashboard-empty-state rounded-lg border border-dashed border-gray-300 bg-white/80 p-8 text-center backdrop-blur-sm dark:border-gray-700 dark:bg-gray-900/80">
+      <div className="dashboard-empty-state rounded-lg border border-dashed border-gray-300 bg-white/80 p-4 text-center backdrop-blur-sm sm:p-8 dark:border-gray-700 dark:bg-gray-900/80">
         <p className="text-base font-semibold">Nothing planned yet</p>
         <p className="mt-1 text-sm text-gray-500">
           Plan your day to start tracking your weekly and monthly progress.
         </p>
         <Link
           href="/dashboard/plan-day"
-          className="mt-4 inline-block rounded-md bg-blue-600 px-6 py-3 text-base font-semibold text-white shadow-md transition hover:bg-blue-700 hover:shadow-lg"
+          className="mt-4 inline-block rounded-md bg-blue-600 px-4 py-2.5 text-base font-semibold text-white shadow-md transition hover:bg-blue-700 hover:shadow-lg sm:px-6 sm:py-3"
         >
           Plan your day
         </Link>
@@ -29,7 +29,7 @@ export function AnalyticsSection({
   }
 
   return (
-    <div className="dashboard-card p-4">
+    <div className="dashboard-card p-3 min-[400px]:p-4">
       <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
         <p className="text-sm font-medium">This week &amp; month</p>
         <Link

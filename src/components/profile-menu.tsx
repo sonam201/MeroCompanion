@@ -49,7 +49,7 @@ export function ProfileMenu({
       {open && (
         <div
           role="menu"
-          className="absolute right-0 z-10 mt-2 w-56 rounded-md border border-gray-200 bg-white p-3 shadow-lg dark:border-gray-700 dark:bg-gray-900"
+          className="absolute right-0 z-10 mt-2 w-56 max-w-[calc(100vw-2rem)] rounded-md border border-gray-200 bg-white p-3 shadow-lg dark:border-gray-700 dark:bg-gray-900"
         >
           <p className="truncate text-sm text-gray-500">Signed in as</p>
           <p className="truncate text-sm font-medium">{email}</p>

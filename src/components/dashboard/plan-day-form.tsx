@@ -229,7 +229,7 @@ export function PlanDayForm({
 
   return (
     <div className="flex flex-col gap-8">
-      <div className="dashboard-card p-4">
+      <div className="dashboard-card p-3 min-[400px]:p-4">
         <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
           <h2 className="text-lg font-semibold">Plan {date}</h2>
           <div className="flex flex-wrap items-center gap-2">
@@ -253,7 +253,7 @@ export function PlanDayForm({
         </div>
 
         <div
-          className="relative max-h-[32rem] overflow-y-auto [--label-col:3.25rem] sm:[--label-col:4rem]"
+          className="relative max-h-[32rem] overflow-y-auto [--label-col:2.75rem] min-[400px]:[--label-col:3.25rem] sm:[--label-col:4rem]"
           style={{ display: "grid", gridTemplateColumns: "var(--label-col) 1fr" }}
         >
           {HOURS.map((hour) => (
@@ -449,7 +449,7 @@ export function PlanDayForm({
       )}
 
       {showCopyIntoThisDay && (
-        <div className="dashboard-card p-4">
+        <div className="dashboard-card p-3 min-[400px]:p-4">
           <p className="text-sm font-medium">Copy into this day</p>
           <p className="mt-1 text-sm text-gray-500">
             {date} doesn&apos;t have a plan yet - start from a day you&apos;ve already planned.

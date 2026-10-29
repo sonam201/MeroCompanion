@@ -46,7 +46,7 @@ export default async function SetPasswordPage({
   }
 
   return (
-    <main className="flex flex-1 flex-col items-center justify-center gap-6 p-4 sm:p-8">
+    <main className="flex flex-1 flex-col items-center justify-center gap-6 p-3 min-[400px]:p-4 sm:p-8">
       <div className="w-full max-w-sm text-center">
         <h1 className="text-2xl font-semibold">Set a password</h1>
         <p className="mt-2 text-sm text-gray-500">

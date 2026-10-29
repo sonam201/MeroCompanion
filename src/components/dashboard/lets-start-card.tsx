@@ -101,7 +101,7 @@ export function LetsStartCard({
 
   if (currentPeriod) {
     return (
-      <div className="dashboard-card p-4">
+      <div className="dashboard-card p-3 min-[400px]:p-4">
         <p className="text-sm font-medium">{activeTaskTitle}</p>
         <div className="mt-2">
           <PomodoroTimer
@@ -115,7 +115,7 @@ export function LetsStartCard({
 
   if (offer) {
     return (
-      <div className="dashboard-card p-4">
+      <div className="dashboard-card p-3 min-[400px]:p-4">
         <p className="text-sm font-medium">{offer.taskTitle}</p>
         <p className="mt-2 text-sm text-gray-500">
           {offer.nextKind === "break" ? "Focus period complete." : "Break complete."}
@@ -153,7 +153,7 @@ export function LetsStartCard({
 
   if (!task) {
     return (
-      <div className="dashboard-card p-4">
+      <div className="dashboard-card p-3 min-[400px]:p-4">
         <p className="text-sm font-medium">Let&apos;s start</p>
         <p className="mt-2 text-sm text-gray-500">
           Nothing left scheduled for today. Enjoy the rest of your day, or plan tomorrow now.
@@ -168,7 +168,7 @@ export function LetsStartCard({
   });
 
   return (
-    <div className="dashboard-card p-4">
+    <div className="dashboard-card p-3 min-[400px]:p-4">
       <p className="text-sm font-medium">Let&apos;s start</p>
       <p className="mt-2 text-base font-semibold">{task.title}</p>
       <p className="text-sm text-gray-500">

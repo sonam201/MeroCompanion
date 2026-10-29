@@ -17,7 +17,7 @@ export function HabitEngagementCard({
   const monthRate = completionRate(analytics.month);
 
   return (
-    <div className="dashboard-card p-4">
+    <div className="dashboard-card p-3 min-[400px]:p-4">
       <p className="text-sm font-medium">Engagement</p>
       <div className="mt-3 grid grid-cols-3 gap-3 text-center">
         <div>

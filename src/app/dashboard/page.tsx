@@ -9,6 +9,7 @@ import { SignOutButton } from "@/components/sign-out-button";
 import { AnalyticsSection } from "@/components/dashboard/analytics-section";
 import { HabitEngagementCard } from "@/components/dashboard/habit-engagement-card";
 import { LetsStartCard } from "@/components/dashboard/lets-start-card";
+import { QuoteCard } from "@/components/dashboard/quote-card";
 import { TodayLabel } from "@/components/dashboard/today-label";
 import {
   getActivePeriod,
@@ -39,7 +40,7 @@ export default async function DashboardPage() {
   ]);
 
   return (
-    <main className="flex flex-1 flex-col gap-6 p-4 sm:p-8">
+    <main className="flex flex-1 flex-col gap-6 p-3 min-[400px]:p-4 sm:p-8">
       <div className="flex flex-wrap items-center justify-between gap-2">
         <h1 className="text-2xl font-semibold">Dashboard</h1>
         <ProfileMenu email={session.user.email ?? ""}>
@@ -65,6 +66,7 @@ export default async function DashboardPage() {
         </div>
         <div className="flex flex-col gap-6">
           <TodayLabel />
+          <QuoteCard />
           <LetsStartCard task={letsStartTask} activePeriod={activePeriod} />
         </div>
       </div>

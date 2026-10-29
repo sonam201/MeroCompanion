@@ -7,7 +7,7 @@ export function TodayLabel() {
   const dateLabel = today.toLocaleDateString(undefined, { month: "long", day: "numeric" });
 
   return (
-    <div className="dashboard-card p-4">
+    <div className="dashboard-card p-3 min-[400px]:p-4">
       <p className="text-xs font-medium uppercase tracking-wide text-gray-400">Today</p>
       <p className="mt-1 text-lg font-semibold">{dayLabel}</p>
       <p className="text-sm text-gray-500">{dateLabel}</p>

@@ -34,7 +34,7 @@ export function MonthCalendar({ selectedDate }: { selectedDate: string }) {
   }
 
   return (
-    <div className="dashboard-card p-3 sm:p-4">
+    <div className="dashboard-card p-2 min-[400px]:p-3 sm:p-4">
       <p className="mb-3 text-sm font-medium">{monthLabel}</p>
       <div className="grid grid-cols-7 gap-0.5 text-center text-xs text-gray-500 sm:gap-1">
         {WEEKDAY_LABELS.map((label) => (

@@ -40,6 +40,34 @@ body {
   animation: dashboard-empty-state-in 400ms ease-out;
 }
 
+@keyframes how-it-works-backdrop-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes how-it-works-panel-in {
+  from {
+    opacity: 0;
+    transform: translateY(0.5rem) scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.how-it-works-backdrop {
+  animation: how-it-works-backdrop-in 200ms ease-out;
+}
+
+.how-it-works-panel {
+  animation: how-it-works-panel-in 250ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
 /* Legibility backing for dashboard cards sitting over the andhakar.jpg
    background (src/app/dashboard/layout.tsx) - without this, card text would
    sit directly on the low-opacity photo. */
