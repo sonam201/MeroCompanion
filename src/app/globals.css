@@ -3,6 +3,7 @@
 :root {
   --background: #ffffff;
   --foreground: #171717;
+  --star-field-color: #9ca3af;
 }
 
 @theme inline {
@@ -17,12 +18,132 @@
   :root {
     --background: #0a0a0a;
     --foreground: #ededed;
+    --star-field-color: #d1d5db;
   }
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
+}
+
+/* Shared ambient background (every page, via the root layout) - deliberately
+   colorless/low-opacity: it adds a sprinkle of twinkling stars without
+   tinting or darkening any existing page background, photo overlay, or
+   card. Stationary dots (no drift) avoid any seamless-loop jump; the whole
+   layer gets one slow alternating pan instead, which never "snaps" since
+   `alternate` reverses smoothly. */
+.star-field {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.star-field-layer {
+  position: absolute;
+  inset: -2%;
+  animation: star-field-drift 90s ease-in-out infinite alternate;
+}
+
+.star-field-dot {
+  position: absolute;
+  border-radius: 50%;
+  background: var(--star-field-color);
+  animation: star-field-twinkle ease-in-out infinite;
+  animation-duration: var(--twinkle-duration, 5s);
+  animation-delay: var(--twinkle-delay, 0s);
+}
+
+@keyframes star-field-twinkle {
+  0%,
+  100% {
+    opacity: 0.08;
+  }
+  50% {
+    opacity: 0.35;
+  }
+}
+
+@keyframes star-field-drift {
+  from {
+    transform: translate(0, 0);
+  }
+  to {
+    transform: translate(-1%, -1.5%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .star-field-layer,
+  .star-field-dot {
+    animation: none;
+  }
+}
+
+/* Landing-page-only accent: a few diagonal streaks crossing occasionally.
+   Original CSS-only implementation (no canvas, no JS loop) - inspired by
+   the documented behavior of shadcn.io's "Shooting Stars" component, not
+   its source, which is a paywalled Pro feature we don't have access to. */
+.shooting-stars {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.shooting-star {
+  position: absolute;
+  top: var(--y, 10%);
+  left: var(--x, 0%);
+  width: 2px;
+  height: 2px;
+  border-radius: 50%;
+  background: rgba(17, 24, 39, 0.55);
+  box-shadow: 0 0 6px 1px rgba(17, 24, 39, 0.3);
+  opacity: 0;
+  animation: shooting-star-fly linear infinite;
+  animation-duration: var(--duration, 7s);
+  animation-delay: var(--delay, 0s);
+}
+
+.shooting-star::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  right: 0;
+  width: 90px;
+  height: 1px;
+  transform: translateY(-50%);
+  background: linear-gradient(90deg, rgba(17, 24, 39, 0), rgba(17, 24, 39, 0.4));
+}
+
+@keyframes shooting-star-fly {
+  0% {
+    transform: translate(0, 0) rotate(35deg);
+    opacity: 0;
+  }
+  4% {
+    opacity: 1;
+  }
+  18% {
+    opacity: 1;
+  }
+  26% {
+    transform: translate(220px, 160px) rotate(35deg);
+    opacity: 0;
+  }
+  100% {
+    transform: translate(220px, 160px) rotate(35deg);
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .shooting-star {
+    display: none;
+  }
 }
 
 @keyframes dashboard-empty-state-in {

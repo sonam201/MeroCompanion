@@ -5,6 +5,7 @@ import { useState } from "react";
 import { EmailOtpSignupForm } from "@/components/auth/email-otp-signup-form";
 import { HowItWorksModal } from "@/components/auth/how-it-works-modal";
 import { PasswordSignInForm } from "@/components/auth/password-sign-in-form";
+import { ShootingStars } from "@/components/auth/shooting-stars";
 import { ToastOnMount } from "@/components/toast-on-mount";
 
 type Panel = "signin" | "signup" | null;
@@ -39,6 +40,7 @@ export function AuthLanding({
             "linear-gradient(to bottom, rgba(255,255,255,0.45), rgba(255,255,255,0.15), rgba(255,255,255,0.45))",
         }}
       />
+      <ShootingStars />
 
       <div className="relative z-10 flex w-full max-w-sm flex-col items-center gap-6 p-3 text-center min-[400px]:p-4 sm:p-8">
         <div>
