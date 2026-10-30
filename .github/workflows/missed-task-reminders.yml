@@ -10,7 +10,14 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Call the missed-task-reminders cron route
+        env:
+          APP_URL: ${{ vars.APP_URL }}
+          CRON_SECRET: ${{ secrets.CRON_SECRET }}
         run: |
+          if [ -z "$APP_URL" ] || [ -z "$CRON_SECRET" ]; then
+            echo "APP_URL and/or CRON_SECRET repo variable/secret not set yet - skipping (not a failure, just not deployed yet)."
+            exit 0
+          fi
           curl -fsS -X POST \
-            -H "Authorization: Bearer ${{ secrets.CRON_SECRET }}" \
-            "${{ vars.APP_URL }}/api/cron/missed-task-reminders"
+            -H "Authorization: Bearer $CRON_SECRET" \
+            "$APP_URL/api/cron/missed-task-reminders"
